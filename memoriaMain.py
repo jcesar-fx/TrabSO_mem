@@ -1,8 +1,9 @@
-import random, time as t
-from algoritmos.FIFO import FIFO
+import copy, time as t
+#from algoritmos.FIFO import FIFO
 from algoritmos.MenosUsado import MenosRecente
-from algoritmos.NaoUsadoFreq import NaoUsadoFreq
+#from algoritmos.NaoUsadoFreq import NaoUsadoFreq
 from algoritmos.Otimo import Otimo
+
 
 class Processo:
     def __init__(self, startTime, PiD, execTime, priority, qntMem, listaSqAcesso):
@@ -30,6 +31,7 @@ class GerenciadorDeMemoria():
         self.politicaMem = None
         self.listaResultados = [] # lista com o numero de trocas de cada algoritmo de substituição
         self.memoria = None
+        self.percent = 0
 
     def iniciar(self): #função responsavel por chamar todas as funções necessarias pro programa funcionar
         self._le_arquivo()
@@ -47,7 +49,7 @@ class GerenciadorDeMemoria():
             self.politicaMem = (linhasLimpas[0].split('|')[2])
             self.sizeMem = int(linhasLimpas[0].split('|')[3])
             self.sizeMold = int(linhasLimpas[0].split('|')[4])
-            self.Percent = int(linhasLimpas[0].split('|')[5])/100
+            self.percent = int(linhasLimpas[0].split('|')[5])/100
 
             self.memoria = Memoria(self.sizeMem, self.sizeMold)
 
@@ -69,12 +71,15 @@ class GerenciadorDeMemoria():
         print(f"\u2699 Iniciando gerenciador com os algoritmos...\n")
         t.sleep(sleeptime)
 
-        self.listaResultados.append( FIFO(self).iniciar() )
-        self.listaResultados.append( MenosRecente(self).iniciar() )
-        self.listaResultados.append( NaoUsadoFreq(self).inciar() )
-        self.listaResultados.append( Otimo(self).iniciar() )
-        
+        MRUself = copy.deepcopy(self)
+        OTIMOself = copy.deepcopy(self)
+
+        #self.listaResultados.append( FIFO(self).iniciar() )
+        self.listaResultados.append( MenosRecente(MRUself).iniciar() )
+        #self.listaResultados.append( NaoUsadoFreq(self).inciar() )
+        self.listaResultados.append( Otimo(OTIMOself).iniciar() )
+
     def _finalizacao(self):
-        a = 0
+        print(self.listaResultados)
                 
-            
+GerenciadorDeMemoria("test").iniciar()           
