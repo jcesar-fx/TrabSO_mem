@@ -47,8 +47,14 @@ class alternanciaCirc():
             # se há processos na lista de processosExecutaveis
             if processosExecutaveis:
                 # diminui o tempo de execução restante do primeiro processo da lista
+                ################################################################
+                                    # area de "execução"
+                ################################################################
                 processosExecutaveis[0].execTime -= 1
                 
+                ################################################################
+                                    # fim de "execução"
+                ################################################################
                 # se o tempo de execução chegou a zero
                 if processosExecutaveis[0].execTime == 0:
                     print(f"\u2705 Processo {processosExecutaveis[0].PiD} terminou\n")
