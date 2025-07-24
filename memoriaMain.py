@@ -35,8 +35,11 @@ class GerenciadorDeMemoria():
 
     def iniciar(self): #função responsavel por chamar todas as funções necessarias pro programa funcionar
         self._le_arquivo()
-        self._exec_algoritmo()
-        self._finalizacao()
+        if self._validacaoBasica():
+            self._exec_algoritmo()
+            self._finalizacao()
+        else:
+            print("há algo de errado na entrada....")
 
     def _le_arquivo(self): #função que lê o arquivo e preenche as variaveis
         with open(self.arquivo, 'r') as starter:
@@ -65,6 +68,21 @@ class GerenciadorDeMemoria():
                 listaSqAcesso = list(map(int, sqAcesso.split(' ')))
 
                 self.processos.append(Processo(startTime, PiD, execTime, priority, qntMem, listaSqAcesso))
+
+    def _validacaoBasica(self):
+        usedMem = 0
+        uniquePiDs = []
+        leiFracao = []
+        for i in range(0, len(self.processos)):
+            usedMem += self.processos[i].qntMem
+            if self.processos[i].PiD not in uniquePiDs:
+                uniquePiDs.append(self.processos[i].PiD)
+            if len(self.processos[i].listaSqAcesso) == self.processos[i].execTime:
+                leiFracao.append(1)
+        if self.sizeMem > self.sizeMold and self.sizeMem > usedMem and (self.politicaMem == 'local' or self.politicaMem == 'global') and len(self.processos) == len(uniquePiDs) and len(self.processos) == len(leiFracao):
+            return True
+        else:
+            return False
 
     def _exec_algoritmo(self):#função responsavel por conectar o main aos demais scripts
         sleeptime = 0.003
